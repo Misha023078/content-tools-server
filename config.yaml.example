@@ -1,0 +1,25 @@
+rsshub_base: "https://rsshub.app"
+
+fetch:
+  request_timeout_seconds: 12
+  user_agent: "content-tools-bot/1.0"
+
+scheduler:
+  ingest_cron: "0 * * * *"
+  transform_cron: "5 * * * *"
+  publish_cron: "10 * * * *"
+
+nlp:
+  provider: "openai"
+  summary_prompt_template: |
+    Сожми текст в 2–3 предложения новостного формата на русском, без воды.
+    Выдели факт/событие и итог для читателя.
+    Текст:
+    {text}
+
+telegram:
+  parse_mode: "HTML"
+  disable_web_page_preview: false
+
+publish:
+  default_type: "text"

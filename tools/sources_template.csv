@@ -1,0 +1,4 @@
+our_channel_username,source_name,source_username,description,default_image_url,source_type,enabled
+@mynewschannel,Tech News,technews,Technology news and updates,https://example.com/tech.jpg,news,True
+@mynewschannel,Business News,businessnews,Business and financial news,https://example.com/business.jpg,news,True
+@mycommercechannel,Tech Store,techstore,Technology products and deals,https://example.com/store.jpg,commerce,True
