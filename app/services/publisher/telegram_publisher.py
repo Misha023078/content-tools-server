@@ -21,6 +21,8 @@ class TelegramPublisherService:
     
     def __init__(self):
         self.db = SessionLocal()
+        if not config.telegram.bot_token:
+            raise RuntimeError("TELEGRAM_BOT_TOKEN is not set. Configure it to enable publishing.")
         self.bot = telebot.TeleBot(config.telegram.bot_token)
     
     async def publish_posts(self) -> Dict[str, Any]:

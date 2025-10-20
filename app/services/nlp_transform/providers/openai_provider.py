@@ -15,6 +15,8 @@ class OpenAIProvider(BaseNLPProvider):
     """OpenAI Chat Completions provider."""
     
     def __init__(self):
+        if not config.openai.api_key:
+            raise RuntimeError("OPENAI_API_KEY is not set. Configure it to use the OpenAI provider.")
         self.client = openai.AsyncOpenAI(api_key=config.openai.api_key)
         self.model = config.openai.model
     

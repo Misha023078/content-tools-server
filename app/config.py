@@ -20,7 +20,7 @@ class DatabaseConfig(BaseSettings):
 
 class OpenAIConfig(BaseSettings):
     """OpenAI configuration."""
-    api_key: str = Field(..., env="OPENAI_API_KEY")
+    api_key: Optional[str] = Field(None, env="OPENAI_API_KEY")
     model: str = Field("gpt-4o-mini", env="OPENAI_MODEL")
     
     class Config:
@@ -29,7 +29,7 @@ class OpenAIConfig(BaseSettings):
 
 class TelegramConfig(BaseSettings):
     """Telegram configuration."""
-    bot_token: str = Field(..., env="TELEGRAM_BOT_TOKEN")
+    bot_token: Optional[str] = Field(None, env="TELEGRAM_BOT_TOKEN")
     
     class Config:
         env_prefix = ""
