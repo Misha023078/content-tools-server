@@ -24,9 +24,10 @@ RUN set -eux; \
 # Copy requirements first for better caching
 COPY requirements.txt .
 
-# Install Python dependencies
+# Install Python dependencies with retry/timeout settings
 RUN python -m pip install --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+    pip install --no-cache-dir --timeout 300 --retries 5 \
+    -i https://pypi.douban.com/simple/ -r requirements.txt
 
 # Copy application code
 COPY . .
