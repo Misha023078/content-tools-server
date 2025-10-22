@@ -24,10 +24,16 @@ RUN set -eux; \
 # Copy requirements first for better caching
 COPY requirements.txt .
 
-# Install Python dependencies with retry/timeout settings
+# Install Python dependencies with multiple fallback mirrors
 RUN python -m pip install --upgrade pip && \
-    pip install --no-cache-dir --timeout 300 --retries 5 \
-    -i https://pypi.douban.com/simple/ -r requirements.txt
+    (pip install --no-cache-dir --timeout 300 --retries 3 \
+    -i https://pypi.org/simple/ -r requirements.txt || \
+    pip install --no-cache-dir --timeout 300 --retries 3 \
+    -i https://pypi.douban.com/simple/ -r requirements.txt || \
+    pip install --no-cache-dir --timeout 300 --retries 3 \
+    -i https://mirrors.aliyun.com/pypi/simple/ -r requirements.txt || \
+    pip install --no-cache-dir --timeout 300 --retries 3 \
+    -i https://pypi.tuna.tsinghua.edu.cn/simple/ -r requirements.txt)
 
 # Copy application code
 COPY . .
