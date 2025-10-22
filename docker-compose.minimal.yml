@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: content_tools
+      POSTGRES_USER: content_tools_user
+      POSTGRES_PASSWORD: your_secure_password_here
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U content_tools_user -d content_tools"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.minimal
+    command: >
+      sh -c "alembic upgrade head && 
+             uvicorn app.main:app --host 0.0.0.0 --port 8000"
+    environment:
+      - DATABASE_URL=postgresql+psycopg://content_tools_user:your_secure_password_here@db:5432/content_tools
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - OPENAI_MODEL=${OPENAI_MODEL:-gpt-4o-mini}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN:-}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+
+  scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile.minimal
+    command: >
+      sh -c "alembic upgrade head && 
+             python -m app.jobs.scheduler"
+    environment:
+      - DATABASE_URL=postgresql+psycopg://content_tools_user:your_secure_password_here@db:5432/content_tools
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - OPENAI_MODEL=${OPENAI_MODEL:-gpt-4o-mini}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN:-}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:

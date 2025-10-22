@@ -34,9 +34,23 @@ if [ ! -f "config.yaml" ]; then
 fi
 
 # Пробуем разные стратегии сборки
-echo "🔨 Пробуем сборку с упрощённым Dockerfile..."
+echo "🔨 Пробуем сборку с минимальным Dockerfile..."
 
-# Стратегия 1: Упрощённый Dockerfile
+# Стратегия 1: Минимальный Dockerfile (без системных зависимостей)
+if [ -f "Dockerfile.minimal" ]; then
+    echo "📦 Используем минимальный Dockerfile (без apt-get)..."
+    docker compose -f docker-compose.minimal.yml build --no-cache
+    if [ $? -eq 0 ]; then
+        echo "✅ Сборка успешна с минимальным Dockerfile"
+        docker compose -f docker-compose.minimal.yml up -d
+        echo "🎉 Приложение запущено!"
+        echo "📊 Проверьте статус: docker compose -f docker-compose.minimal.yml ps"
+        echo "📋 Логи: docker compose -f docker-compose.minimal.yml logs -f"
+        exit 0
+    fi
+fi
+
+# Стратегия 2: Упрощённый Dockerfile
 if [ -f "Dockerfile.simple" ]; then
     echo "📦 Используем упрощённый Dockerfile..."
     docker compose -f docker-compose.simple.yml build --no-cache
