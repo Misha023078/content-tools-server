@@ -5,7 +5,8 @@ Loads configuration from environment variables and YAML config file.
 
 import os
 from typing import Optional
-from pydantic import BaseSettings, Field
+from pydantic import Field
+from pydantic_settings import BaseSettings
 import yaml
 from pathlib import Path
 
