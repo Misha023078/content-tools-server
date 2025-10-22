@@ -13,7 +13,7 @@ from pathlib import Path
 
 class DatabaseConfig(BaseSettings):
     """Database configuration."""
-    url: str = Field(..., env="DATABASE_URL")
+    url: str = Field("postgresql+psycopg://content_tools_user:your_secure_password_here@db:5432/content_tools", env="DATABASE_URL")
     
     class Config:
         env_prefix = ""
